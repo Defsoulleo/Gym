@@ -4,84 +4,82 @@ const intensityByObs = {
   'Isometria':   { color: '#2979FF', value: 0.50 },
   'Aumenta a carga': { color: '#FF5252', value: 0.80 }
 };
+const StorageKey = 'gymState_full_v1';
 
-function buildTable(day, items) {
-  const wrap = document.createElement('div');
-  wrap.className = 'container card';
+function loadState(){ try{return JSON.parse(localStorage.getItem(StorageKey))||{};}catch{return{};}}
+function saveState(s){ localStorage.setItem(StorageKey, JSON.stringify(s)); }
+function todayStr(){ const d=new Date();return d.toISOString().split('T')[0]; }
 
-  const h2 = document.createElement('h2');
-  h2.textContent = day;
-  wrap.appendChild(h2);
+function buildTable(day, items){
+  const state=loadState(); const today=todayStr();
+  state[day]=state[day]||{}; state[day][today]=state[day][today]||{done:[]};
+  const doneSet=new Set(state[day][today].done);
 
-  const legend = document.createElement('div');
-  legend.className = 'legend';
-  legend.innerHTML = `
+  const wrap=document.createElement('div'); wrap.className='container card';
+
+  const h2=document.createElement('h2'); h2.textContent=day;
+  const controls=document.createElement('div'); controls.className='controls';
+  const progDay=document.createElement('div'); progDay.className='progress-day';
+  const bar=document.createElement('div'); bar.className='bar'; progDay.appendChild(bar);
+  controls.appendChild(progDay);
+
+  const finishBtn=document.createElement('button'); finishBtn.textContent='Finalizar treino do dia';
+  finishBtn.onclick=()=>{ state[day][today].done=items.map((_,i)=>i); saveState(state); render(day); };
+  controls.appendChild(finishBtn);
+
+  h2.appendChild(controls); wrap.appendChild(h2);
+
+  const legend=document.createElement('div'); legend.className='legend';
+  legend.innerHTML=`
     <div class="item"><span class="swatch" style="background:#00C853"></span>Aquecimento</div>
     <div class="item"><span class="swatch" style="background:#FF5252"></span>Aumenta a carga</div>
-    <div class="item"><span class="swatch" style="background:#2979FF"></span>Isometria</div>
-  `;
+    <div class="item"><span class="swatch" style="background:#2979FF"></span>Isometria</div>`;
   wrap.appendChild(legend);
 
-  const tableWrap = document.createElement('div');
-  tableWrap.className = 'table-wrap';
-  const table = document.createElement('table');
-  table.innerHTML = `
-    <thead>
-      <tr><th>Exercício</th><th>Séries/Reps</th><th>Observações</th></tr>
-    </thead>
-    <tbody></tbody>
-  `;
-  const tbody = table.querySelector('tbody');
+  const tableWrap=document.createElement('div'); tableWrap.className='table-wrap';
+  const table=document.createElement('table');
+  table.innerHTML=`<thead><tr><th></th><th>Exercício</th><th>Séries/Reps</th><th>Observações</th></tr></thead><tbody></tbody>`;
+  const tbody=table.querySelector('tbody');
 
-  items.forEach(it => {
-    const tr = document.createElement('tr');
-    const td1 = document.createElement('td'); td1.textContent = it.exercicio || '';
-    const td2 = document.createElement('td'); td2.textContent = it.series || '';
-    const td3 = document.createElement('td');
-    if (it.obs) {
-      const span = document.createElement('span');
-      span.className = 'badge';
-      span.textContent = it.obs;
-      const meta = intensityByObs[it.obs];
-      if (meta) span.style.background = meta.color;
+  function update(){ bar.style.width=(doneSet.size/items.length*100)+'%'; }
+
+  items.forEach((it,idx)=>{
+    const tr=document.createElement('tr');
+
+    // checkbox
+    const td0=document.createElement('td');
+    const box=document.createElement('div'); box.className='todo'+(doneSet.has(idx)?' checked':''); box.textContent=doneSet.has(idx)?'✓':'';
+    box.onclick=()=>{ if(doneSet.has(idx)){doneSet.delete(idx);}else{doneSet.add(idx);} state[day][today].done=[...doneSet]; saveState(state); box.className='todo'+(doneSet.has(idx)?' checked':''); box.textContent=doneSet.has(idx)?'✓':''; update(); };
+    td0.appendChild(box);
+
+    const td1=document.createElement('td'); td1.textContent=it.exercicio||'';
+    const td2=document.createElement('td'); td2.textContent=it.series||'';
+    const td3=document.createElement('td');
+
+    if(it.obs){
+      const span=document.createElement('span'); span.className='badge'; span.textContent=it.obs;
+      const meta=intensityByObs[it.obs]; if(meta){span.style.background=meta.color;}
       td3.appendChild(span);
 
-      const prog = document.createElement('div');
-      prog.className = 'progress';
-      const bar = document.createElement('div');
-      bar.className = 'bar';
-      if (meta) {
-        bar.style.background = meta.color;
-        bar.style.width = (meta.value * 100) + '%';
-      }
-      prog.appendChild(bar);
-      td3.appendChild(prog);
-    } else {
-      td3.textContent = '';
+      const prog=document.createElement('div'); prog.className='progress';
+      const pb=document.createElement('div'); pb.className='bar';
+      if(meta){ pb.style.background=meta.color; pb.style.width=(meta.value*100)+'%'; }
+      prog.appendChild(pb); td3.appendChild(prog);
     }
-    tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
-    tbody.appendChild(tr);
+
+    tr.append(td0,td1,td2,td3); tbody.appendChild(tr);
   });
 
-  tableWrap.appendChild(table);
-  wrap.appendChild(tableWrap);
+  table.appendChild(tbody); tableWrap.appendChild(table); wrap.appendChild(tableWrap);
+  update();
   return wrap;
 }
 
-function render(day) {
-  const main = document.getElementById('content');
-  main.innerHTML = '';
-  main.appendChild(buildTable(day, window.WORKOUTS[day] || []));
-}
+function render(day){ const main=document.getElementById('content'); main.innerHTML=''; main.appendChild(buildTable(day, window.WORKOUTS[day]||[])); }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const tabs = document.querySelectorAll('.tab');
-  tabs.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabs.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      render(btn.dataset.day);
-    });
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.onclick=()=>{ document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render(btn.dataset.day); };
   });
   render('Segunda');
 });

@@ -10,9 +10,13 @@ p { margin:0; color:#b6bcc6; }
 .tab.active { border-color:#5b9cff; outline: none; }
 .tab:focus { outline: 2px solid #5b9cff; }
 
-.container { max-width: 900px; margin: 18px auto; padding: 0 12px; }
+.container { max-width: 980px; margin: 18px auto; padding: 0 12px; }
 .card { background:#14161b; border:1px solid #222; border-radius:12px; margin-bottom:16px; }
-.card h2 { margin:0; padding:14px 16px; border-bottom:1px solid #222; font-size:18px; }
+.card h2 { margin:0; padding:14px 16px; border-bottom:1px solid #222; font-size:18px; display:flex; align-items:center; justify-content:space-between; }
+
+.progress-day { width: 240px; height: 8px; background:#1f2228; border:1px solid #2a2e36; border-radius:10px; overflow:hidden; margin-left:12px; }
+.progress-day .bar { height:100%; width:0; background:#5b9cff; }
+
 .table-wrap { width:100%; overflow: visible; position: relative; z-index:0; }
 
 table { width:100%; border-collapse: collapse; }
@@ -23,12 +27,12 @@ th {
   font-weight:700;
   position: sticky;
   top: 62px;
-  z-index: 999;              /* sempre acima */
+  z-index: 999;
   box-shadow: 0 2px 0 #23262d;
 }
+
 tbody td { position: relative; z-index: 1; }
-tbody td .badge,
-tbody td .progress { position: relative; z-index: 1; }
+tbody td .badge, tbody td .progress { position: relative; z-index: 1; }
 
 .badge { display:inline-block; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:700; color:#0e0f12; white-space:nowrap; }
 
@@ -38,5 +42,12 @@ tbody td .progress { position: relative; z-index: 1; }
 .legend { display:flex; gap:10px; flex-wrap:wrap; margin: 8px 0 18px; }
 .legend .item { display:flex; align-items:center; gap:8px; font-size:12px; color:#b6bcc6; }
 .legend .swatch { width:14px; height:14px; border-radius:4px; display:inline-block; border:1px solid #333; }
+
+.controls { display:flex; gap:10px; align-items:center; }
+.controls button { background:#1c2027; border:1px solid #2a2e36; color:#e7ebf0; padding:8px 12px; border-radius:10px; cursor:pointer; }
+.controls button:hover { border-color:#5b9cff; }
+
+.todo { width:24px; height:24px; border:1px solid #2a2e36; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; background:#17181d; }
+.todo.checked { background:#00C853; border-color:#00C853; color:#0e0f12; font-weight:800; }
 
 footer { text-align:center; padding:20px; color:#8a93a0; border-top:1px solid #222; margin-top:24px; }
