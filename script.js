@@ -4,11 +4,18 @@ const intensityByObs = {
   'Isometria':   { color: '#2979FF', value: 0.50 },
   'Aumenta a carga': { color: '#FF5252', value: 0.80 }
 };
-const StorageKey = 'gymState_full_v1';
+const StorageKey = 'gymState_improved_v2';
 
 function loadState(){ try{return JSON.parse(localStorage.getItem(StorageKey))||{};}catch{return{};}}
 function saveState(s){ localStorage.setItem(StorageKey, JSON.stringify(s)); }
 function todayStr(){ const d=new Date();return d.toISOString().split('T')[0]; }
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2000);
+}
 
 function buildTable(day, items){
   const state=loadState(); const today=todayStr();
@@ -24,7 +31,10 @@ function buildTable(day, items){
   controls.appendChild(progDay);
 
   const finishBtn=document.createElement('button'); finishBtn.textContent='Finalizar treino do dia';
-  finishBtn.onclick=()=>{ state[day][today].done=items.map((_,i)=>i); saveState(state); render(day); };
+  finishBtn.onclick=()=>{
+    state[day][today].done=items.map((_,i)=>i); saveState(state);
+    updateDayProgress(); markCompletedIfNeeded(); showToast('Treino concluído! ✅');
+  };
   controls.appendChild(finishBtn);
 
   h2.appendChild(controls); wrap.appendChild(h2);
@@ -41,7 +51,17 @@ function buildTable(day, items){
   table.innerHTML=`<thead><tr><th></th><th>Exercício</th><th>Séries/Reps</th><th>Observações</th></tr></thead><tbody></tbody>`;
   const tbody=table.querySelector('tbody');
 
-  function update(){ bar.style.width=(doneSet.size/items.length*100)+'%'; }
+  function updateDayProgress(){
+    const pct = (doneSet.size/items.length*100) || 0;
+    bar.style.width = pct + '%';
+  }
+  function markCompletedIfNeeded(){
+    if(doneSet.size === items.length && items.length>0){
+      wrap.classList.add('completed');
+    } else {
+      wrap.classList.remove('completed');
+    }
+  }
 
   items.forEach((it,idx)=>{
     const tr=document.createElement('tr');
@@ -49,7 +69,13 @@ function buildTable(day, items){
     // checkbox
     const td0=document.createElement('td');
     const box=document.createElement('div'); box.className='todo'+(doneSet.has(idx)?' checked':''); box.textContent=doneSet.has(idx)?'✓':'';
-    box.onclick=()=>{ if(doneSet.has(idx)){doneSet.delete(idx);}else{doneSet.add(idx);} state[day][today].done=[...doneSet]; saveState(state); box.className='todo'+(doneSet.has(idx)?' checked':''); box.textContent=doneSet.has(idx)?'✓':''; update(); };
+    box.onclick=()=>{
+      if(doneSet.has(idx)){ doneSet.delete(idx); }
+      else { doneSet.add(idx); }
+      state[day][today].done=[...doneSet]; saveState(state);
+      box.className='todo'+(doneSet.has(idx)?' checked':''); box.textContent=doneSet.has(idx)?'✓':'';
+      updateDayProgress(); markCompletedIfNeeded();
+    };
     td0.appendChild(box);
 
     const td1=document.createElement('td'); td1.textContent=it.exercicio||'';
@@ -71,15 +97,26 @@ function buildTable(day, items){
   });
 
   table.appendChild(tbody); tableWrap.appendChild(table); wrap.appendChild(tableWrap);
-  update();
+
+  // initial state
+  updateDayProgress(); markCompletedIfNeeded();
   return wrap;
 }
 
-function render(day){ const main=document.getElementById('content'); main.innerHTML=''; main.appendChild(buildTable(day, window.WORKOUTS[day]||[])); }
+function render(day){
+  const main=document.getElementById('content');
+  main.innerHTML='';
+  main.appendChild(buildTable(day, window.WORKOUTS[day]||[]));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.tab').forEach(btn=>{
-    btn.onclick=()=>{ document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render(btn.dataset.day); };
+    btn.onclick=()=>{
+      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      render(btn.dataset.day);
+    };
   });
   render('Segunda');
 });
