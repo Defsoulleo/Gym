@@ -324,7 +324,12 @@
     tbody td { padding: 14px 14px; font-size: 14px; vertical-align: middle; }
     tbody td:first-child { text-align: center; }
     tbody td:nth-child(3) { text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; font-size: 13px; color: var(--muted); }
-    .exercise-name { font-weight: 600; }
+    .exercise-name {
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
     /* CHECKBOX */
     .todo-box {
@@ -402,11 +407,31 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
-      .stats-bar { grid-template-columns: 1fr 1fr; }
-      .workout-title { font-size: 28px; }
-      .day-progress-track { width: 90px; }
-      thead th { top: 98px; }
+      .stats-bar { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+      .stat-card { padding: 12px 14px; }
+      .stat-card-value { font-size: 26px; }
+      .header-inner { padding: 0 12px; }
+      .header-date { display: none; }
+      .logo { font-size: 22px; }
+      .profile-btn { padding: 7px 10px; font-size: 12px; }
+      .tabs-inner { padding: 8px 10px; gap: 6px; }
+      .tab { padding: 7px 11px; font-size: 12px; }
+      .workout-title { font-size: 26px; }
+      .workout-header { gap: 8px; }
+      .day-controls { width: 100%; justify-content: space-between; }
+      .day-progress-track { width: 80px; }
+      .finish-btn { font-size: 12px; padding: 8px 12px; }
+      .table-wrap { border-radius: 10px; }
+      thead th { top: 94px; padding: 10px 10px; font-size: 10px; }
+      tbody td { padding: 11px 10px; font-size: 13px; }
+      .exercise-name { font-size: 12px; }
+      tbody td:nth-child(3) { font-size: 12px; }
+      .page { padding: 14px 10px 80px; }
+      .legend { gap: 10px; }
+      .legend-item { font-size: 11px; }
       .form-grid { grid-template-columns: 1fr; }
+      .modal { padding: 24px 18px; }
+      .chart-section { padding: 14px; }
     }
   </style>
 </head>
@@ -415,7 +440,7 @@
 <!-- HEADER -->
 <header class="header">
   <div class="header-inner">
-    <div class="logo">Léo<span>Fit</span></div>
+    <div class="logo">Def<span>soul</span></div>
     <div class="header-date" id="headerDate"></div>
     <button class="profile-btn" onclick="openModal()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
