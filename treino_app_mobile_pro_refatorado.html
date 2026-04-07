@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DefSoul Pro+</title>
+
+<style>
+:root{
+  --bg:#0a0c12;
+  --card:#121520;
+  --accent:#c8f135;
+  --text:#e8eaf0;
+  --muted:#6b7280;
+  --line:#1f2433;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:sans-serif;background:var(--bg);color:var(--text)}
+
+.container{padding:16px;max-width:500px;margin:auto}
+
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.logo{font-size:22px;font-weight:800;color:var(--accent)}
+
+.tabs{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px}
+.tabs button{
+  flex:0 0 auto;
+  padding:8px 14px;
+  border-radius:10px;
+  border:none;
+  background:var(--card);
+  color:var(--muted);
+  font-weight:600;
+}
+.tabs button.active{
+  background:var(--accent);
+  color:#000;
+}
+
+.progress{
+  height:6px;
+  background:var(--card);
+  border-radius:99px;
+  overflow:hidden;
+  margin-bottom:16px;
+}
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:var(--accent);
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:10px;
+  transition:transform .15s;
+}
+.card:active{transform:scale(0.98)}
+
+.exercise{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.exercise-name{font-weight:700}
+.exercise-meta{font-size:12px;color:var(--muted)}
+
+.check{
+  width:28px;height:28px;border-radius:8px;
+  border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:.2s;
+}
+.check.active{
+  background:var(--accent);
+  color:#000;
+  transform:scale(1.1);
+}
+
+.badge{
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:20px;
+  margin-top:6px;
+  display:inline-block;
+}
+
+.btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:var(--accent);
+  font-weight:800;
+  margin-top:10px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:16px;
+}
+.stat{
+  background:var(--card);
+  padding:12px;
+  border-radius:12px;
+  text-align:center;
+  border:1px solid var(--line);
+}
+.stat span{display:block;font-size:12px;color:var(--muted)}
+.stat strong{font-size:20px}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+  <div class="logo">DEFSOUL</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><span>Peso</span><strong id="peso">--</strong></div>
+  <div class="stat"><span>IMC</span><strong id="imc">--</strong></div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="progress"><div class="progress-bar" id="bar"></div></div>
+
+<div id="list"></div>
+
+<button class="btn" onclick="finish()">Finalizar treino</button>
+
+</div>
+
+<script>
+
+const WORKOUTS={
+  "Segunda":[{n:"Supino",s:"4x10"},{n:"Peck Deck",s:"4x10"}],
+  "Terça":[{n:"Agachamento",s:"4x10"},{n:"Leg 45",s:"4x10"}],
+  "Quarta":[{n:"Remada",s:"4x10"},{n:"Rosca",s:"4x10"}]
+};
+
+let current="Segunda";
+let state=JSON.parse(localStorage.getItem('app')||"{}");
+
+function save(){localStorage.setItem('app',JSON.stringify(state))}
+
+function renderTabs(){
+  const t=document.getElementById('tabs');
+  t.innerHTML='';
+  Object.keys(WORKOUTS).forEach(d=>{
+    const b=document.createElement('button');
+    b.textContent=d;
+    if(d===current)b.classList.add('active');
+    b.onclick=()=>{current=d;render()};
+    t.appendChild(b);
+  });
+}
+
+function render(){
+  renderTabs();
+  const list=document.getElementById('list');
+  list.innerHTML='';
+
+  state[current]=state[current]||[];
+
+  WORKOUTS[current].forEach((ex,i)=>{
+    const card=document.createElement('div');
+    card.className='card';
+
+    const row=document.createElement('div');
+    row.className='exercise';
+
+    const name=document.createElement('div');
+    name.innerHTML=`<div class="exercise-name">${ex.n}</div><div class="exercise-meta">${ex.s}</div>`;
+
+    const check=document.createElement('div');
+    check.className='check'+(state[current].includes(i)?' active':'');
+    check.innerHTML='✓';
+
+    check.onclick=()=>{
+      if(state[current].includes(i)){
+        state[current]=state[current].filter(x=>x!==i);
+      }else{
+        state[current].push(i);
+      }
+      save();
+      render();
+    };
+
+    row.appendChild(name);
+    row.appendChild(check);
+    card.appendChild(row);
+    list.appendChild(card);
+  });
+
+  updateBar();
+}
+
+function updateBar(){
+  const total=WORKOUTS[current].length;
+  const done=(state[current]||[]).length;
+  document.getElementById('bar').style.width=(done/total*100)+'%';
+}
+
+function finish(){
+  state[current]=WORKOUTS[current].map((_,i)=>i);
+  save();
+  render();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
