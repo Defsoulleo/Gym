@@ -752,27 +752,58 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
+      /* Stats */
       .stats-bar { grid-template-columns: 1fr 1fr; gap: 8px; }
       .stat-card { padding: 12px 14px; }
       .stat-card-value { font-size: 24px; }
+
+      /* Header */
       .header-inner { padding: 0 14px; }
       .header-date { display: none; }
-      .logo { font-size: 24px; }
-      .profile-btn { padding: 7px 10px; }
-      .tabs-inner { padding: 8px 12px; gap: 5px; }
-      .tab { padding: 6px 10px; font-size: 10px; }
-      .workout-title { font-size: 36px; }
-      .day-controls { width: 100%; justify-content: space-between; }
-      .day-progress-track { width: 80px; }
-      .finish-btn, .reset-btn { font-size: 10px; padding: 8px 12px; }
+      .logo { font-size: 22px; letter-spacing: 3px; }
+      .profile-btn { padding: 7px 10px; font-size: 10px; }
+
+      /* Tabs — scroll horizontal em vez de quebrar linha */
+      .tabs-inner {
+        padding: 8px 12px;
+        gap: 5px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .tabs-inner::-webkit-scrollbar { display: none; }
+      .tab { padding: 6px 12px; font-size: 10px; flex-shrink: 0; }
+
+      /* Workout header — empilha título e controles */
+      .workout-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .workout-title { font-size: 36px; letter-spacing: 4px; }
+      .day-controls { width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+      .day-progress-wrap { flex: 1; min-width: 0; }
+      .day-progress-track { width: 100%; min-width: 60px; }
+      .finish-btn, .reset-btn { font-size: 10px; padding: 8px 12px; flex-shrink: 0; }
+
+      /* Tabela — corrige larguras das colunas (table-layout: fixed usa thead) */
       .table-wrap { border-radius: 8px; }
-      thead th { padding: 9px 10px; font-size: 8px; }
-      tbody td { padding: 11px 10px; font-size: 12px; }
-      .exercise-name { font-size: 11px; }
-      tbody td:nth-child(3) { font-size: 11px; width: 100px; }
-      tbody td:nth-child(4) { width: 120px; }
+      thead th { padding: 9px 8px; font-size: 8px; letter-spacing: 1px; }
+      thead th:nth-child(1) { width: 52px; }
+      thead th:nth-child(3) { width: 90px; }
+      thead th:nth-child(4) { width: 100px; }
+      tbody td { padding: 11px 8px; font-size: 12px; }
+      tbody td:nth-child(1) { width: 52px; }
+      tbody td:nth-child(3) { font-size: 11px; width: 90px; }
+      tbody td:nth-child(4) { width: 100px; }
+      .exercise-name { font-size: 11px; letter-spacing: 0.4px; }
+
+      /* Page */
       .page { padding: 14px 12px 80px; }
       .legend { gap: 10px; }
+
+      /* Modal */
       .form-grid { grid-template-columns: 1fr; }
       .modal { padding: 24px 18px; }
       .modal-actions { flex-direction: column-reverse; }
