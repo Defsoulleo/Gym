@@ -548,7 +548,8 @@
       border-radius: var(--radius);
       background: var(--panel);
     }
-    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    table { width: 100%; border-collapse: collapse; }
+
     thead th {
       background: var(--panel2);
       padding: 11px 16px;
@@ -561,20 +562,9 @@
       white-space: nowrap;
       font-family: 'Chakra Petch', sans-serif;
     }
-
-    /* Larguras fixas — thead e tbody usam as mesmas */
-    thead th:nth-child(1),
-    tbody td:nth-child(1) { width: 80px; }
-    thead th:nth-child(3),
-    tbody td:nth-child(3) { width: 160px; }
-    thead th:nth-child(4),
-    tbody td:nth-child(4) { width: 180px; }
-
-    /* Alinhamentos thead */
-    thead th:nth-child(1) { text-align: center; }
-    thead th:nth-child(2) { text-align: left; }
+    thead th:nth-child(1) { text-align: left; }
+    thead th:nth-child(2) { text-align: center; }
     thead th:nth-child(3) { text-align: center; }
-    thead th:nth-child(4) { text-align: center; }
 
     tbody tr {
       border-bottom: 1px solid var(--line);
@@ -584,9 +574,7 @@
       transform: translateY(6px);
       animation: rowIn .35s cubic-bezier(.16,1,.3,1) forwards;
     }
-    @keyframes rowIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes rowIn { to { opacity: 1; transform: translateY(0); } }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: rgba(43,127,255,0.025); }
     tbody tr::before {
@@ -599,30 +587,38 @@
       transition: opacity .2s;
     }
     tbody tr:hover::before { opacity: 0.5; }
-
-    /* Row checked state */
     tbody tr.row-done { background: rgba(0,217,126,0.03); }
     tbody tr.row-done .exercise-name { color: var(--muted); }
 
-    /* Padding e alinhamento tbody */
-    tbody td { padding: 14px 16px; font-size: 13px; vertical-align: middle; overflow: hidden; }
-    tbody td:nth-child(1) { text-align: center; padding: 14px 8px; }
-    tbody td:nth-child(2) { text-align: left; }
-    tbody td:nth-child(3) {
+    tbody td { padding: 14px 16px; font-size: 13px; vertical-align: middle; }
+
+    /* Col 1 — checkbox + exercício */
+    .td-exercise {
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+    }
+
+    /* Col 2 — séries */
+    tbody td:nth-child(2) {
       text-align: center;
       font-weight: 600;
       font-family: 'DM Mono', monospace;
-      font-size: 13px;
       color: var(--text);
     }
-    tbody td:nth-child(4) { text-align: center; }
 
-    /* Checkbox cell: número em cima, caixa embaixo, centralizado */
+    /* Col 3 — obs */
+    tbody td:nth-child(3) { text-align: center; }
+
+    /* Checkbox: número em cima, caixa embaixo */
     .cell-check {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
+      flex-shrink: 0;
     }
 
     /* Row number */
@@ -782,24 +778,12 @@
       .day-progress-track { width: 100%; min-width: 60px; }
       .finish-btn, .reset-btn { font-size: 10px; padding: 8px 12px; flex-shrink: 0; }
 
-      /* Tabela mobile — larguras compartilhadas thead/tbody */
-      .table-wrap { border-radius: 8px; overflow-x: hidden; }
-      table { table-layout: fixed; width: 100%; }
-      thead th { padding: 9px 6px; font-size: 7px; letter-spacing: 0.8px; }
-      thead th:nth-child(1), tbody td:nth-child(1) { width: 46px; }
-      thead th:nth-child(3), tbody td:nth-child(3) { width: 68px; }
-      thead th:nth-child(4), tbody td:nth-child(4) { width: 104px; }
-      thead th:nth-child(1) { text-align: center; }
-      thead th:nth-child(2) { text-align: left; }
-      thead th:nth-child(3) { text-align: center; }
-      thead th:nth-child(4) { text-align: center; }
-      tbody td { padding: 12px 6px; font-size: 11px; }
-      tbody td:nth-child(1) { text-align: center; padding: 12px 4px; }
-      tbody td:nth-child(2) { text-align: left; }
-      tbody td:nth-child(3) { text-align: center; font-size: 12px; font-weight: 700; }
-      tbody td:nth-child(4) { text-align: center; padding: 12px 4px; }
-      .cell-check { align-items: center; }
-      .exercise-name { font-size: 11px; letter-spacing: 0.3px; white-space: normal; word-break: break-word; }
+      /* Tabela mobile */
+      .table-wrap { border-radius: 8px; }
+      thead th { padding: 9px 10px; font-size: 7px; letter-spacing: 0.8px; }
+      tbody td { padding: 12px 10px; font-size: 11px; }
+      .td-exercise { padding: 12px 10px; gap: 10px; }
+      .exercise-name { font-size: 11px; letter-spacing: 0.3px; }
       .badge { font-size: 8px; padding: 3px 6px; letter-spacing: 0.4px; }
       .todo-box { width: 24px; height: 24px; font-size: 11px; }
       .row-num { font-size: 8px; }
@@ -1249,7 +1233,18 @@ function render(day){
   // table
   const tw = document.createElement('div'); tw.className = 'table-wrap';
   const tbl = document.createElement('table');
-  tbl.innerHTML = `<thead><tr><th>Check</th><th>Exercício</th><th>Séries / Reps</th><th>Observações</th></tr></thead>`;
+  const isMobile = window.innerWidth <= 600;
+  tbl.innerHTML = `
+    <colgroup>
+      <col style="width:${isMobile ? '180px' : '40%'}">
+      <col style="width:${isMobile ? '80px' : '20%'}">
+      <col style="width:${isMobile ? '110px' : '25%'}">
+    </colgroup>
+    <thead><tr>
+      <th style="text-align:left;padding-left:16px">Exercício</th>
+      <th style="text-align:center">Séries / Reps</th>
+      <th style="text-align:center">Observações</th>
+    </tr></thead>`;
   const tbody = document.createElement('tbody');
 
   function updateProgress(){
@@ -1268,12 +1263,14 @@ function render(day){
     tr.style.animationDelay = `${idx * 35}ms`;
     if(doneSet.has(idx)) tr.classList.add('row-done');
 
-    const tdCheck = document.createElement('td');
-    const cellCheck = document.createElement('div');
-    cellCheck.className = 'cell-check';
+    // Col 1: checkbox + número + nome do exercício juntos
+    const tdName = document.createElement('td');
+    tdName.className = 'td-exercise';
+
     const rowNum = document.createElement('span');
     rowNum.className = 'row-num';
     rowNum.textContent = String(idx+1).padStart(2,'0');
+
     const box = document.createElement('div');
     box.className = 'todo-box' + (doneSet.has(idx) ? ' checked' : '');
     box.textContent = doneSet.has(idx) ? '✓' : '';
@@ -1285,12 +1282,18 @@ function render(day){
       tr.classList.toggle('row-done', doneSet.has(idx));
       updateProgress(); updateTabDone(day); updateStatsBar();
     };
-    cellCheck.appendChild(rowNum);
-    cellCheck.appendChild(box);
-    tdCheck.appendChild(cellCheck);
 
-    const tdName = document.createElement('td');
-    tdName.innerHTML = `<div class="exercise-name">${it.exercicio||''}</div>`;
+    const checkWrap = document.createElement('div');
+    checkWrap.className = 'cell-check';
+    checkWrap.appendChild(rowNum);
+    checkWrap.appendChild(box);
+
+    const nameWrap = document.createElement('div');
+    nameWrap.className = 'exercise-name';
+    nameWrap.textContent = it.exercicio || '';
+
+    tdName.appendChild(checkWrap);
+    tdName.appendChild(nameWrap);
 
     const tdSer = document.createElement('td'); tdSer.textContent = it.series||'—';
     const tdObs = document.createElement('td');
@@ -1314,7 +1317,7 @@ function render(day){
       tdObs.style.fontSize = '12px';
     }
 
-    tr.append(tdCheck, tdName, tdSer, tdObs);
+    tr.append(tdName, tdSer, tdObs);
     tbody.appendChild(tr);
   });
 
