@@ -562,13 +562,13 @@
       font-family: 'Chakra Petch', sans-serif;
     }
     /* Col 1: check */
-    thead th:nth-child(1) { width: 72px; text-align: center; }
+    thead th:nth-child(1) { width: 64px; text-align: left; padding-left: 16px; }
     /* Col 2: exercise name – takes remaining space */
     thead th:nth-child(2) { text-align: left; }
     /* Col 3: series */
-    thead th:nth-child(3) { width: 150px; text-align: center; }
+    thead th:nth-child(3) { width: 140px; text-align: left; }
     /* Col 4: obs */
-    thead th:nth-child(4) { width: 170px; text-align: center; }
+    thead th:nth-child(4) { width: 160px; text-align: left; }
 
     tbody tr {
       border-bottom: 1px solid var(--line);
@@ -602,31 +602,33 @@
 
     /* Col 1: checkbox + row num */
     tbody td:nth-child(1) {
-      text-align: center;
-      width: 72px;
+      text-align: left;
+      width: 64px;
+      padding-left: 16px;
+      padding-right: 8px;
     }
     /* Col 2: exercise */
     tbody td:nth-child(2) { text-align: left; }
     /* Col 3: series */
     tbody td:nth-child(3) {
-      text-align: center;
+      text-align: left;
       font-weight: 600;
       font-family: 'DM Mono', monospace;
       font-size: 13px;
       color: var(--text);
-      width: 150px;
+      width: 140px;
     }
     /* Col 4: obs */
     tbody td:nth-child(4) {
-      text-align: center;
-      width: 170px;
+      text-align: left;
+      width: 160px;
     }
 
-    /* First cell: stack checkbox + row-num vertically */
+    /* First cell: stack checkbox + row-num vertically, aligned left */
     .cell-check {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       gap: 4px;
     }
 
@@ -660,7 +662,7 @@
       transition: all .18s;
       font-size: 12px;
       color: transparent;
-      margin: 0 auto;
+      margin: 0;
     }
     .todo-box.checked {
       background: var(--green-dim);
@@ -791,14 +793,15 @@
       .table-wrap { border-radius: 8px; overflow-x: hidden; }
       table { table-layout: fixed; width: 100%; }
       thead th { padding: 8px 6px; font-size: 7px; letter-spacing: 0.8px; }
-      thead th:nth-child(1) { width: 46px; }
+      thead th:nth-child(1) { width: 46px; padding-left: 10px; text-align: left; }
       thead th:nth-child(2) { text-align: left; }
-      thead th:nth-child(3) { width: 72px; }
-      thead th:nth-child(4) { width: 110px; }
+      thead th:nth-child(3) { width: 68px; text-align: left; }
+      thead th:nth-child(4) { width: 108px; text-align: left; }
       tbody td { padding: 10px 6px; font-size: 11px; }
-      tbody td:nth-child(1) { width: 46px; padding: 10px 4px; }
-      tbody td:nth-child(3) { font-size: 11px; width: 72px; font-weight: 700; }
-      tbody td:nth-child(4) { width: 110px; padding: 10px 4px; }
+      tbody td:nth-child(1) { width: 46px; padding: 10px 6px 10px 10px; text-align: left; }
+      tbody td:nth-child(3) { font-size: 11px; width: 68px; font-weight: 700; text-align: left; }
+      tbody td:nth-child(4) { width: 108px; padding: 10px 6px; text-align: left; }
+      .cell-check { align-items: flex-start; }
       .exercise-name { font-size: 11px; letter-spacing: 0.3px; white-space: normal; word-break: break-word; }
       .badge { font-size: 8px; padding: 3px 6px; letter-spacing: 0.4px; white-space: normal; text-align: center; }
       .todo-box { width: 24px; height: 24px; font-size: 11px; }
