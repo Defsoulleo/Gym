@@ -787,17 +787,22 @@
       .day-progress-track { width: 100%; min-width: 60px; }
       .finish-btn, .reset-btn { font-size: 10px; padding: 8px 12px; flex-shrink: 0; }
 
-      /* Tabela — corrige larguras das colunas (table-layout: fixed usa thead) */
-      .table-wrap { border-radius: 8px; }
-      thead th { padding: 9px 8px; font-size: 8px; letter-spacing: 1px; }
-      thead th:nth-child(1) { width: 52px; }
-      thead th:nth-child(3) { width: 90px; }
-      thead th:nth-child(4) { width: 100px; }
-      tbody td { padding: 11px 8px; font-size: 12px; }
-      tbody td:nth-child(1) { width: 52px; }
-      tbody td:nth-child(3) { font-size: 11px; width: 90px; }
-      tbody td:nth-child(4) { width: 100px; }
-      .exercise-name { font-size: 11px; letter-spacing: 0.4px; }
+      /* Tabela — compacta no mobile, igual ao print */
+      .table-wrap { border-radius: 8px; overflow-x: hidden; }
+      table { table-layout: fixed; width: 100%; }
+      thead th { padding: 8px 6px; font-size: 7px; letter-spacing: 0.8px; }
+      thead th:nth-child(1) { width: 46px; }
+      thead th:nth-child(2) { text-align: left; }
+      thead th:nth-child(3) { width: 72px; }
+      thead th:nth-child(4) { width: 110px; }
+      tbody td { padding: 10px 6px; font-size: 11px; }
+      tbody td:nth-child(1) { width: 46px; padding: 10px 4px; }
+      tbody td:nth-child(3) { font-size: 11px; width: 72px; font-weight: 700; }
+      tbody td:nth-child(4) { width: 110px; padding: 10px 4px; }
+      .exercise-name { font-size: 11px; letter-spacing: 0.3px; white-space: normal; word-break: break-word; }
+      .badge { font-size: 8px; padding: 3px 6px; letter-spacing: 0.4px; white-space: normal; text-align: center; }
+      .todo-box { width: 24px; height: 24px; font-size: 11px; }
+      .row-num { font-size: 8px; }
 
       /* Page */
       .page { padding: 14px 12px 80px; }
