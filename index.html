@@ -562,13 +562,13 @@
       font-family: 'Chakra Petch', sans-serif;
     }
     /* Col 1: check */
-    thead th:nth-child(1) { width: 64px; text-align: left; padding-left: 16px; }
+    thead th:nth-child(1) { width: 72px; text-align: left; padding-left: 20px; }
     /* Col 2: exercise name – takes remaining space */
-    thead th:nth-child(2) { text-align: left; }
+    thead th:nth-child(2) { text-align: left; padding-left: 16px; }
     /* Col 3: series */
-    thead th:nth-child(3) { width: 140px; text-align: left; }
+    thead th:nth-child(3) { width: 160px; text-align: center; }
     /* Col 4: obs */
-    thead th:nth-child(4) { width: 160px; text-align: left; }
+    thead th:nth-child(4) { width: 200px; text-align: center; }
 
     tbody tr {
       border-bottom: 1px solid var(--line);
@@ -598,33 +598,33 @@
     tbody tr.row-done { background: rgba(0,217,126,0.03); }
     tbody tr.row-done .exercise-name { color: var(--muted); }
 
-    tbody td { padding: 12px 16px; font-size: 13px; vertical-align: middle; overflow: hidden; }
+    tbody td { padding: 14px 16px; font-size: 13px; vertical-align: middle; overflow: hidden; }
 
-    /* Col 1: checkbox + row num */
+    /* Col 1: checkbox + row num — alinhado à esquerda */
     tbody td:nth-child(1) {
       text-align: left;
-      width: 64px;
-      padding-left: 16px;
+      width: 72px;
+      padding-left: 20px;
       padding-right: 8px;
     }
-    /* Col 2: exercise */
-    tbody td:nth-child(2) { text-align: left; }
-    /* Col 3: series */
+    /* Col 2: exercise — alinhado à esquerda */
+    tbody td:nth-child(2) { text-align: left; padding-left: 16px; }
+    /* Col 3: series — centralizado */
     tbody td:nth-child(3) {
-      text-align: left;
+      text-align: center;
       font-weight: 600;
       font-family: 'DM Mono', monospace;
       font-size: 13px;
       color: var(--text);
-      width: 140px;
-    }
-    /* Col 4: obs */
-    tbody td:nth-child(4) {
-      text-align: left;
       width: 160px;
     }
+    /* Col 4: obs — centralizado */
+    tbody td:nth-child(4) {
+      text-align: center;
+      width: 200px;
+    }
 
-    /* First cell: stack checkbox + row-num vertically, aligned left */
+    /* First cell: stack checkbox + row-num vertically, alinhado à esquerda */
     .cell-check {
       display: flex;
       flex-direction: column;
@@ -789,21 +789,22 @@
       .day-progress-track { width: 100%; min-width: 60px; }
       .finish-btn, .reset-btn { font-size: 10px; padding: 8px 12px; flex-shrink: 0; }
 
-      /* Tabela — compacta no mobile, igual ao print */
+      /* Tabela — compacta no mobile */
       .table-wrap { border-radius: 8px; overflow-x: hidden; }
       table { table-layout: fixed; width: 100%; }
       thead th { padding: 8px 6px; font-size: 7px; letter-spacing: 0.8px; }
-      thead th:nth-child(1) { width: 46px; padding-left: 10px; text-align: left; }
-      thead th:nth-child(2) { text-align: left; }
-      thead th:nth-child(3) { width: 68px; text-align: left; }
-      thead th:nth-child(4) { width: 108px; text-align: left; }
-      tbody td { padding: 10px 6px; font-size: 11px; }
-      tbody td:nth-child(1) { width: 46px; padding: 10px 6px 10px 10px; text-align: left; }
-      tbody td:nth-child(3) { font-size: 11px; width: 68px; font-weight: 700; text-align: left; }
-      tbody td:nth-child(4) { width: 108px; padding: 10px 6px; text-align: left; }
+      thead th:nth-child(1) { width: 48px; text-align: left; padding-left: 10px; }
+      thead th:nth-child(2) { text-align: left; padding-left: 8px; }
+      thead th:nth-child(3) { width: 70px; text-align: center; }
+      thead th:nth-child(4) { width: 108px; text-align: center; }
+      tbody td { padding: 11px 6px; font-size: 11px; }
+      tbody td:nth-child(1) { width: 48px; padding: 11px 6px 11px 10px; text-align: left; }
+      tbody td:nth-child(2) { text-align: left; padding-left: 8px; }
+      tbody td:nth-child(3) { font-size: 12px; width: 70px; font-weight: 700; text-align: center; }
+      tbody td:nth-child(4) { width: 108px; padding: 11px 6px; text-align: center; }
       .cell-check { align-items: flex-start; }
       .exercise-name { font-size: 11px; letter-spacing: 0.3px; white-space: normal; word-break: break-word; }
-      .badge { font-size: 8px; padding: 3px 6px; letter-spacing: 0.4px; white-space: normal; text-align: center; }
+      .badge { font-size: 8px; padding: 3px 7px; letter-spacing: 0.4px; white-space: nowrap; }
       .todo-box { width: 24px; height: 24px; font-size: 11px; }
       .row-num { font-size: 8px; }
 
