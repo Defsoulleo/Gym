@@ -120,3 +120,64 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
   render('Segunda');
 });
+
+
+// ===== PREMIUM FEATURES =====
+
+function startRestTimer(seconds = 60){
+  const timer = document.getElementById('restTimer');
+  const value = document.getElementById('timerValue');
+
+  if(!timer || !value) return;
+
+  timer.classList.remove('hidden');
+
+  let remaining = seconds;
+  value.textContent = remaining;
+
+  const interval = setInterval(()=>{
+    remaining--;
+    value.textContent = remaining;
+
+    if(remaining <= 0){
+      clearInterval(interval);
+      timer.classList.add('hidden');
+
+      if(navigator.vibrate){
+        navigator.vibrate([200,100,200]);
+      }
+
+      showToast('Descanso finalizado 🔥');
+    }
+  },1000);
+}
+
+document.addEventListener('change',(e)=>{
+  const checkbox = e.target.closest('input[type="checkbox"]');
+
+  if(checkbox && checkbox.checked){
+    startRestTimer(60);
+  }
+});
+
+const floatingBtn = document.getElementById('floatingFinish');
+
+if(floatingBtn){
+  floatingBtn.addEventListener('click',()=>{
+    showToast('Treino finalizado com sucesso 🚀');
+
+    if(navigator.vibrate){
+      navigator.vibrate([100,50,100,50,200]);
+    }
+  });
+}
+
+// Add subtle animation on load
+window.addEventListener('load',()=>{
+  document.body.style.opacity = '0';
+  document.body.style.transition = 'opacity .4s ease';
+
+  requestAnimationFrame(()=>{
+    document.body.style.opacity = '1';
+  });
+});

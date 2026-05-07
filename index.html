@@ -800,6 +800,142 @@
       .btn-reset-profile { width: 100%; justify-content: center; }
     }
   </style>
+
+<style>
+  .floating-finish{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    z-index:9999;
+    border:none;
+    border-radius:18px;
+    padding:16px 22px;
+    background:linear-gradient(135deg,#00d97e,#2b7fff);
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 0 25px rgba(0,217,126,.35);
+    backdrop-filter:blur(10px);
+    transition:.25s ease;
+  }
+
+  .floating-finish:hover{
+    transform:translateY(-2px) scale(1.02);
+  }
+
+  .rest-timer{
+    position:fixed;
+    bottom:95px;
+    right:20px;
+    width:110px;
+    height:110px;
+    border-radius:24px;
+    background:rgba(10,15,22,.88);
+    border:1px solid rgba(0,217,126,.25);
+    backdrop-filter:blur(14px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    box-shadow:0 0 35px rgba(0,217,126,.2);
+  }
+
+  .rest-timer.hidden{
+    display:none;
+  }
+
+  .timer-title{
+    font-size:11px;
+    color:#00d97e;
+    letter-spacing:2px;
+  }
+
+  #timerValue{
+    font-size:36px;
+    font-weight:800;
+    color:white;
+    line-height:1;
+    margin:6px 0;
+  }
+
+  .timer-sub{
+    font-size:10px;
+    color:#7e8fa7;
+    letter-spacing:1px;
+  }
+
+  .exercise-row:hover{
+    background:rgba(43,127,255,.05);
+    transition:.25s ease;
+  }
+
+  @media (max-width: 768px){
+
+    body{
+      overflow-x:hidden;
+    }
+
+    .floating-finish{
+      left:14px;
+      right:14px;
+      width:calc(100% - 28px);
+      bottom:14px;
+      border-radius:16px;
+      padding:18px;
+      font-size:14px;
+    }
+
+    .rest-timer{
+      width:95px;
+      height:95px;
+      right:14px;
+      bottom:88px;
+    }
+
+    #timerValue{
+      font-size:30px;
+    }
+
+    table{
+      display:block;
+      overflow-x:auto;
+      white-space:nowrap;
+    }
+
+    .tabs{
+      overflow-x:auto;
+      flex-wrap:nowrap !important;
+      padding-bottom:10px;
+    }
+
+    .tabs::-webkit-scrollbar{
+      display:none;
+    }
+
+    .cards,
+    .stats,
+    .top-grid{
+      grid-template-columns:1fr !important;
+    }
+
+    .container,
+    .content,
+    .card{
+      width:100% !important;
+      max-width:100% !important;
+    }
+
+    h1,h2{
+      line-height:1;
+    }
+
+    .workout-title{
+      font-size:54px !important;
+    }
+  }
+</style>
+
 </head>
 <body>
 
@@ -1355,5 +1491,16 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', renderWeightChart);
 });
 </script>
+
+  <div id="restTimer" class="rest-timer hidden">
+    <div class="timer-title">DESCANSO</div>
+    <div id="timerValue">60</div>
+    <div class="timer-sub">segundos</div>
+  </div>
+
+  <button id="floatingFinish" class="floating-finish">
+    FINALIZAR TREINO ✓
+  </button>
+
 </body>
 </html>
